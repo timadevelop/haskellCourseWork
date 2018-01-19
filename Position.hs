@@ -1,0 +1,37 @@
+-- module Position
+-- where
+-- import Object
+-- -- Position
+-- data Position = Position Int Int deriving (Show, Eq)
+--
+-- sumPositions :: Position -> Position -> Position
+-- sumPositions (Position x1 y1) (Position x2 y2) = Position (x1 + x2) (y1 + y2)
+--
+-- instance Ord Position where
+--   (<=) (Position x1 y1) (Position x2 y2) = x1 <= x2 && y1 <= x2
+--
+-- isValidPosition :: Position -> Bool
+-- isValidPosition p = p >= (fst globalBounds) &&
+--                     p <= (snd globalBounds) &&
+--                     not (elem p (takenPositions $ getCurrentRoom initialGameState ))
+-- --- Located
+-- class Located a where
+--     getLocation :: a -> Position
+--
+-- instance Located Object where
+--     getLocation (Car _ _ p) = p
+--     getLocation (Door _ _ p) = p
+--     getLocation (Player _ _ _ p) = p
+--
+-- --- Movable
+-- class (Located a) => Movable a where
+--     setLocation :: Position -> a -> a
+--     move :: Position -> a -> Prelude.Maybe a
+-- --
+-- instance Movable Object where
+--     setLocation newPosition obj@(Car _ _ _) = obj {carPosition = newPosition}
+--     move vector obj@(Car _ _ lastPosition) =
+--       let newPosition = sumPositions lastPosition vector
+--       in if isValidPosition newPosition
+--         then Prelude.Just (setLocation newPosition obj) -- set new ps
+--         else Prelude.Nothing  -- Error "You cannot go there" -- do nothing
