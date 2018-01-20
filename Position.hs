@@ -1,37 +1,43 @@
--- module Position
--- where
--- import Object
--- -- Position
--- data Position = Position Int Int deriving (Show, Eq)
---
--- sumPositions :: Position -> Position -> Position
--- sumPositions (Position x1 y1) (Position x2 y2) = Position (x1 + x2) (y1 + y2)
---
--- instance Ord Position where
---   (<=) (Position x1 y1) (Position x2 y2) = x1 <= x2 && y1 <= x2
---
--- isValidPosition :: Position -> Bool
--- isValidPosition p = p >= (fst globalBounds) &&
---                     p <= (snd globalBounds) &&
---                     not (elem p (takenPositions $ getCurrentRoom initialGameState ))
--- --- Located
--- class Located a where
---     getLocation :: a -> Position
---
--- instance Located Object where
---     getLocation (Car _ _ p) = p
---     getLocation (Door _ _ p) = p
---     getLocation (Player _ _ _ p) = p
---
--- --- Movable
--- class (Located a) => Movable a where
---     setLocation :: Position -> a -> a
---     move :: Position -> a -> Prelude.Maybe a
--- --
--- instance Movable Object where
---     setLocation newPosition obj@(Car _ _ _) = obj {carPosition = newPosition}
---     move vector obj@(Car _ _ lastPosition) =
---       let newPosition = sumPositions lastPosition vector
---       in if isValidPosition newPosition
---         then Prelude.Just (setLocation newPosition obj) -- set new ps
---         else Prelude.Nothing  -- Error "You cannot go there" -- do nothing
+module Position
+where
+
+
+-- Position
+data Position = Position Int Int deriving (Show, Eq)
+
+r :: Position -> Int
+r (Position r _) = r
+
+c :: Position -> Int
+c (Position _ c) = c
+
+sumPositions :: Position -> Position -> Position
+sumPositions (Position r1 c1) (Position r2 c2) = Position (r1 + r2) (c1 + c2)
+
+distanceBetween :: Position -> Position -> Position
+distanceBetween (Position r1 c1) (Position r2 c2) = Position (r1 - r2) (c1 - c2)
+
+instance Ord Position where
+  (<=) (Position r1 c1) (Position r2 c2) = r1 <= r2 && c1 <= r2
+
+positionToString :: Position -> String
+positionToString p = show p
+
+getDirectionVector :: String -> Position
+getDirectionVector "left" = Position 0 (-1)
+getDirectionVector "right" = Position 0 1
+getDirectionVector "up" = Position (-1) 0
+getDirectionVector "down" = Position 1 0
+getDirectionVector _ = Position 0 0
+
+getDirectionWord :: Position -> String
+getDirectionWord (Position 0 (-1)) = "left"
+getDirectionWord (Position 0 1) = "right"
+getDirectionWord (Position (-1) 0) =  "up"
+getDirectionWord (Position 1 0) = "down"
+getDirectionWord (Position 0 0) = "under you"
+getDirectionWord (Position (-1) (-1)) = "left up corner"
+getDirectionWord (Position (-1) 1) = "right up corner"
+getDirectionWord (Position 1 (-1)) = "left bottom corner"
+getDirectionWord (Position 1 1) = "right bottom corner"
+getDirectionWord _ = "undefined"

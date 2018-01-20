@@ -1,13 +1,25 @@
 module Room
 where
-
+import ListUtils
+import Data.List
+import Position
 import Object
 
 data Room = Room {
     roomName :: String
-  , takenPositions :: [Position]
+  -- , takenPositions :: [Position]
   , objectsInside :: [Object]
-} deriving (Show)
+} deriving (Show, Eq)
+
+getPlayer :: Room -> Object
+getPlayer room = head $ filter isPlayer (objectsInside room)
+
+insertToPlayerInventory :: Object -> Room -> Room
+insertToPlayerInventory obj room = replaceObj (getPlayer room) (insertToInventoryOf (getPlayer room) obj) room
+
+
+takenPositions :: Room -> [Position]
+takenPositions room = map (\obj -> (getLocation obj)) (objectsInside room)
 
 insertObject :: Object -> Room -> Room
 insertObject obj room =
@@ -15,8 +27,18 @@ insertObject obj room =
     then room -- TODO error
     else
       let newObjects = obj:(objectsInside room)
-          newTakenPositions = (getLocation obj):(takenPositions room)
-      in room { takenPositions = newTakenPositions, objectsInside = newObjects }
+      in room { objectsInside = newObjects }
+
+replaceObj :: Object -> Object -> Room -> Room
+replaceObj obj newObj room =
+  case elemIndex obj (objectsInside room) of
+    Prelude.Nothing -> insertObject obj room
+    Prelude.Just index -> room { objectsInside = replaceNth index newObj (objectsInside room) }
+
+removeObj :: Object -> Room -> Room
+removeObj obj room = room { objectsInside = (filter (/=obj) (objectsInside room)) }
+
+
 
       -- foldr' :: (Int -> a -> a -> a) -> a -> Int -> [a] -> a
       -- foldr' _ nv ni [] = nv

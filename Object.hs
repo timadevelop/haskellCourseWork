@@ -1,6 +1,6 @@
 module Object
 where
--- import Position
+import Position
 -- import GameState
 --- object type
 data Object =  Land
@@ -17,16 +17,40 @@ data Object =  Land
                     , destination :: String
                     , doorPosition :: Position
                     }
+              | Small {title :: String
+                    , content :: String
+                    , smallPosition :: Position
+                    }
               deriving (Show, Eq)
 
--- Position
-data Position = Position Int Int deriving (Show, Eq)
 
-sumPositions :: Position -> Position -> Position
-sumPositions (Position x1 y1) (Position x2 y2) = Position (x1 + x2) (y1 + y2)
+insertToInventoryOf :: Object -> Object -> Object
+insertToInventoryOf player@(Player _ _ inv _) obj@(Small _ _ _) =  player { inventory = obj:inv }
 
-instance Ord Position where
-  (<=) (Position x1 y1) (Position x2 y2) = x1 <= x2 && y1 <= x2
+isKey :: Object -> Bool
+isKey (Small "Key" _ _) = True
+isKey _ = False
+
+isSmall :: Object -> Bool
+isSmall (Small _ _ _) = True
+isSmall _ = False
+
+isPlayer :: Object -> Bool
+isPlayer (Player _ _ _ _) = True
+isPlayer _ = False
+
+isCar :: Object -> Bool
+isCar (Car _ _ _) = True
+isCar _ = False
+
+getObjectName :: Object -> String
+getObjectName (Player name _ _ _) = "Player with name " ++ name
+getObjectName (Car name _ _) = "Car with name " ++ name
+getObjectName (Door _ dest _) = "Door to " ++ dest
+getObjectName (Small title _ _) = title
+
+objectsToString :: [Object] -> (Object -> String) -> String
+objectsToString objs toString = foldr (\objStr acc ->  objStr ++ acc) [] (map toString objs)
 
 --- Located
 class Located a where
@@ -36,6 +60,7 @@ instance Located Object where
     getLocation (Car _ _ p) = p
     getLocation (Door _ _ p) = p
     getLocation (Player _ _ _ p) = p
+    getLocation (Small _ _ p) = p
 
 --- Movable
 class (Located a) => Movable a where
@@ -44,8 +69,9 @@ class (Located a) => Movable a where
 --
 instance Movable Object where
     setLocation newPosition obj@(Car _ _ _) = obj {carPosition = newPosition}
-    move vector obj@(Car _ _ lastPosition) p =
-      let newPosition = sumPositions lastPosition vector
+    setLocation newPosition obj@(Player _ _ _ _) = obj {playerPosition = newPosition}
+    move vector obj p =
+      let newPosition = sumPositions (getLocation obj) vector
       in if p newPosition
         then Prelude.Just (setLocation newPosition obj) -- set new ps
         else Prelude.Nothing  -- Error "You cannot go there" -- do nothing
