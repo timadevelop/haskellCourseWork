@@ -2,16 +2,10 @@ module InitialGameState
     ( initialGameState
     ) where
 
-import Data.List.Split
-
-import ListUtils (removeSuccessiveDups)
-import Utils (trim)
 import Position
 import Object
 import Room
 import GameState
-import Utils
-import Object
 
 {- initial state representation
 1,2,3 are hints
