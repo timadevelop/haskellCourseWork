@@ -13,7 +13,7 @@ import GameState
 import Utils
 import Object
 
-{-
+{- initial state representation
 1,2,3 are hints
 P is a player
 C is a car
@@ -42,8 +42,8 @@ k - inValid Keys
 -- find library -> find proper key near library ->
 -- go to the car -> use car -> end of the game
 -}
-player = Player "Vlad" 20 [] (Position 0 0)
 
+player = Player "" 20 [] (Position 0 0)
 
 hint1 = Small "Hint 1" "you must escape from here!!! I tried to escape in the most strange ways, \
 \\nbut in the end I realized that the best way was to find a car and break through the huge gates of this city,\
@@ -63,14 +63,13 @@ hint0 = Small "Hint 0" "ello, my name is Stan, this diary has a lot of secrets o
 
 food = Small "Food" "Meat" (Position 2 2)
 
-
 firstRoomObjects = [player, hint1, car, hint2, libraryDoor, key, key2, hint0, food]
 
-
 initialRooms = [Room "Home" firstRoomObjects
-                ,  Room "Yard" []
-                , Room "Street" []
-                , Room "Shop" []]
+                -- ,  Room "Yard" []
+                -- , Room "Street" []
+                -- , Room "Shop" []]
+                ]
 
 initialGameState :: GameState
 initialGameState = GameState 0 initialRooms "" False

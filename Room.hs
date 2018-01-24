@@ -1,7 +1,7 @@
 module Room
 where
 import ListUtils
-import Data.List
+import Data.List (elemIndex)
 import Position
 import Object
 

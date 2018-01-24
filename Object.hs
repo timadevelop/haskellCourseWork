@@ -1,7 +1,8 @@
 module Object
 where
+
 import Position
--- import GameState
+
 --- object type
 data Object =  Land
               | Player {playerName :: String
@@ -24,9 +25,11 @@ data Object =  Land
               deriving (Show, Eq)
 
 
+-- insert to inventory of player some item and return new player instance
 insertToInventoryOf :: Object -> Object -> Object
 insertToInventoryOf player@(Player _ _ inv _) obj@(Small _ _ _) =  player { inventory = obj:inv }
 
+-- predicates for detecting type constructor of Object
 isKey :: Object -> Bool
 isKey (Small "Key" _ _) = True
 isKey _ = False
@@ -43,6 +46,7 @@ isCar :: Object -> Bool
 isCar (Car _ _ _) = True
 isCar _ = False
 
+-- visual representation
 getObjectName :: Object -> String
 getObjectName (Player name _ _ _) = "Player with name " ++ name
 getObjectName (Car name _ _) = "Car with name " ++ name
@@ -66,7 +70,7 @@ instance Located Object where
 class (Located a) => Movable a where
     setLocation :: Position -> a -> a
     move :: Position -> a -> (Position -> Bool )-> Prelude.Maybe a
---
+
 instance Movable Object where
     setLocation newPosition obj@(Car _ _ _) = obj {carPosition = newPosition}
     setLocation newPosition obj@(Player _ _ _ _) = obj {playerPosition = newPosition}

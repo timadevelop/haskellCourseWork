@@ -4,17 +4,9 @@ import Commands
 import InitialGameState (initialGameState)
 import GameState
 
-import Data.List.Split
 import ListUtils (removeSuccessiveDups)
 import Utils
 
--- executes commands as "go right" and return Just GameState or Error String
-execute :: String -> GameState -> JustOrError GameState String
-execute "" _ = Utils.Error "Pass the comand"
-execute cmd gs =
-  let command = (splitOn " " cmd)
-  in callCommand (head command) (tail command) gs
--- execute _ _ = Utils.Error "You can't do it, Sorry."
 
 -- text gamer see in the end of the game
 endText :: String
@@ -31,6 +23,7 @@ startText = "\nHey. Your name is Chris, 2 hours ago you were a fellow traveler i
 \ \nYou must get out of this place and get home at any cost. \
 \ \n\nType \"help\" to see what you can do"
 
+
 runGame :: IO ()
 runGame = eval initialGameState
     where
@@ -45,7 +38,7 @@ runGame = eval initialGameState
             then
               putStrLn "Failed"
               else
-                case execute (trim $ removeSuccessiveDups ' ' command) lastGameState of -- "   go    4   right" -> "go 4 right"
+                case execute (trim $ removeSuccessiveDups ' ' command) lastGameState of
                   Utils.Error str -> (eval (setMsg str lastGameState))
                   Utils.Just newGameState -- execute returns new gamestate
                       | isEnd newGameState -> putStrLn endText
