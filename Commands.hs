@@ -117,6 +117,7 @@ callCommand "help" _ _ = Utils.Error "You can run any of the following commands:
 \ \n i or inventory                               - to display your inventory \
 \ \n <inventory | i> !! <0 | 1 | .. 9>            - to see the content of N-th element from your inventory \
 \ \n use car <right | left | up | down>           - to use a car for escaping \
+\ \n open door <direction>                        - to open the door"
 \ \n h or help                                    - to see this message again"
 callCommand _ _ _ = Utils.Error "You can't do it, Sorry."
 
