@@ -163,7 +163,7 @@ openDoor side gs =
       then Utils.Error "There is no door in this direction"
       else if not $ null $ filter (\obj -> null (doorKey obj) || elem (doorKey obj) keys) found -- if plyear has a key in inventory
         then case elemIndex (head (filter (\r -> (destination (head found) == (roomName r)))  (rooms gs))) (rooms gs) of
-                Prelude.Just i -> Utils.Just $ setMsg "You're in some new place. Hope here You'll find a key." (createObject currentPlayer ( (GameState.removeObj currentPlayer gs) { currentRoomIndex = i }))
+                Prelude.Just i -> Utils.Just $ setMsg "You're in some new place. Hope here You'll find something interesting here." (createObject currentPlayer ( (GameState.removeObj currentPlayer gs) { currentRoomIndex = i }))
                 Prelude.Nothing -> Utils.Error "No such uroom"
         else Utils.Error "You have no key for this door."
 
