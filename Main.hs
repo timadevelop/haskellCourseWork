@@ -8,7 +8,7 @@ import ListUtils (removeSuccessiveDups)
 import Utils
 
 
--- text gamer see in the end of the game
+-- some texts
 endText :: String
 endText = "\nYou found a way to open the car and break through the gates of a mystical city. \
 \ \n\nA day later you were already in your hometown, you were met by a family, and you threw the car on the road. \
@@ -46,6 +46,5 @@ runGame = eval initialGameState
 
 
 main = do
-    -- g <- getStdGen
     putStr startText
     runGame
