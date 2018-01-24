@@ -75,6 +75,7 @@ callCommand "inventory" ("!!":(i:_):_) gs =
         format = (\o -> (getObjectName o) ++ " contents:\n" ++ "\"" ++ (content o) ++ "\"")
         newMsg = objectsToString [(inventory $ getCurrentPlayer gs) !! (digitToInt i)] format :: String
       in Utils.Just (setMsg newMsg gs)
+
 callCommand "h" args gs = callCommand "help" args gs
 callCommand "help" _ _ = Utils.Error "You can run any of the following commands: \
 \ \n p or position                                - this command will show your position \

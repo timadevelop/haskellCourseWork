@@ -45,7 +45,7 @@ runGame = eval initialGameState
             then
               putStrLn "Failed"
               else
-                case execute (trim $ removeSuccessiveDups command) lastGameState of -- "   go    4   right" -> "go 4 right"
+                case execute (trim $ removeSuccessiveDups ' ' command) lastGameState of -- "   go    4   right" -> "go 4 right"
                   Utils.Error str -> (eval (setMsg str lastGameState))
                   Utils.Just newGameState -- execute returns new gamestate
                       | isEnd newGameState -> putStrLn endText
