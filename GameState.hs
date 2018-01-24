@@ -18,7 +18,8 @@ data GameState = GameState {
 } deriving (Show)
 
 win :: GameState -> GameState
-win gs = gs { isEnd = True }
+win gs = let nOfHints = length (filter (\o -> isSmall o && isInfixOf "Hint" (title o)) (inventory $ getCurrentPlayer gs))
+          in (setMsg ("Score: " ++ show nOfHints ++ " of 3 hints found.") gs) { isEnd = True }
 
 getRoom :: GameState -> Int -> Room
 getRoom gs i = (rooms gs) !! i

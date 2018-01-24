@@ -41,7 +41,7 @@ runGame = eval initialGameState
                 case execute (trim $ removeSuccessiveDups ' ' command) lastGameState of
                   Utils.Error str -> (eval (setMsg str lastGameState))
                   Utils.Just newGameState -- execute returns new gamestate
-                      | isEnd newGameState -> putStrLn endText
+                      | isEnd newGameState -> putStrLn ((msg newGameState) ++ "\n" ++ endText)
                       | otherwise -> eval newGameState
 
 

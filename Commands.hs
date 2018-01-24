@@ -52,7 +52,7 @@ callCommand "go" (arg:args) gs --Utils.Just $ (movePlayer (getDirectionVector ar
 -- alias for position
 callCommand "p" args gs = callCommand "position" args gs
 callCommand "position" _ gs = Utils.Just (setMsg ("You are in " ++ (show $ currentPlayerPosition gs)) gs)
-
+callCommand "win" _ gs = Utils.Just $ win gs
 -- look around
 callCommand "l" args gs = callCommand "look" args gs
 callCommand "look" _ gs =
