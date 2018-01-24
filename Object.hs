@@ -38,6 +38,10 @@ isSmall :: Object -> Bool
 isSmall (Small _ _ _) = True
 isSmall _ = False
 
+isDoor :: Object -> Bool
+isDoor (Door _ _ _) = True
+isDoor _ = False
+
 isPlayer :: Object -> Bool
 isPlayer (Player _ _ _ _) = True
 isPlayer _ = False

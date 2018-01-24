@@ -5,6 +5,9 @@ module Commands
 import Data.List.Split
 import Data.Char
 
+
+import Data.List (elemIndex)
+
 import Position
 import Room
 import GameState
@@ -70,6 +73,14 @@ callCommand "use" ("car":[]) _ = Utils.Error "Specify the direction to car locat
 callCommand "use" ("car":side:_) gs
   | elem side sides = useCar side gs -- side verification
   | otherwise = Utils.Error "Specify the proper direction of car location"
+
+
+callCommand "open" [] _ = Utils.Error "What do you want to open?"
+callCommand "open" ("door":[]) _ = Utils.Error "Specify the direction to the door location"
+callCommand "open" ("door":side:_) gs
+  | elem side sides = openDoor side gs -- side verification
+  | otherwise = Utils.Error "Specify the proper direction of car location"
+
 
 -- take some small object to inventory
 callCommand "take" [] _ = Utils.Error "What do you want to take?"
@@ -137,6 +148,25 @@ useCar side gs =
       else if not $ null $ filter (\obj -> elem (carKey obj) keys) foundCars -- if plyear has a key in inventory
         then Utils.Just $ win gs
         else Utils.Error "You have no key for this car."
+
+
+-- use a car
+openDoor :: String -> GameState -> JustOrError GameState String
+openDoor side gs =
+  let location = sumPositions (currentPlayerPosition gs) (getDirectionVector side) :: Position
+      currentInventory = inventory $ getCurrentPlayer gs  :: [Object]
+      keys = map content (filter isKey currentInventory) :: [String]
+      found = filter (\obj -> isDoor obj && (getLocation obj) == location) (objectsInside $ getCurrentRoom gs) :: [Object]
+      currentPlayer = getCurrentPlayer gs
+  in
+    if null found
+      then Utils.Error "There is no door in this direction"
+      else if not $ null $ filter (\obj -> null (doorKey obj) || elem (doorKey obj) keys) found -- if plyear has a key in inventory
+        then case elemIndex (head (filter (\r -> (destination (head found) == (roomName r)))  (rooms gs))) (rooms gs) of
+                Prelude.Just i -> Utils.Just $ setMsg "You're in some new place. Hope here You'll find a key." (createObject currentPlayer ( (GameState.removeObj currentPlayer gs) { currentRoomIndex = i }))
+                Prelude.Nothing -> Utils.Error "No such uroom"
+        else Utils.Error "You have no key for this door."
+
 
 -- move current player
 movePlayer :: Position -> GameState -> GameState
